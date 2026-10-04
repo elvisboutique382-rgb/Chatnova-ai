@@ -1,0 +1,29 @@
+name: Generate Flutter Android Files
+
+on:
+  workflow_dispatch:
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: 'stable'
+          channel: stable
+
+      - name: Generate Android project
+        run: flutter create --platforms=android .
+
+      - name: Commit Android files
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add android
+          git commit -m "Generate Flutter Android project" || echo "No changes to commit"
+          git push
